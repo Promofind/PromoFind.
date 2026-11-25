@@ -1,0 +1,42 @@
+PROMOFIND — DOSSIER DE MISE EN LIGNE
+====================================
+
+CONTENU
+- index.html : site public (catalogues par univers, recherche, filtres).
+- config.js : deux valeurs publiques à renseigner après création du projet Supabase.
+- admin.html : interface privée de gestion des offres.
+- supabase-schema.sql : tables et règles de sécurité RLS.
+
+CE QUI EST DÉJÀ PRÉPARÉ
+- Site public séparé de l’administration.
+- Admin séparé, connexion par email/mot de passe et vérification du rôle dans la base.
+- La base n’autorise la lecture publique que des offres publiées.
+- Les écritures, modifications et suppressions sont réservées aux comptes présents dans la table admins.
+- Les offres ajoutées depuis l’Admin alimentent le site public automatiquement.
+- Les liens affiliés peuvent être marqués dans l’Admin ; ne coche cette case que si le lien est réellement affilié.
+
+LES QUELQUES ÉTAPES QUI RESTENT (IMPOSSIBLES À FAIRE SANS TON COMPTE)
+1. Avec un parent/représentant légal, créer un projet Supabase et un dépôt GitHub. Les contrats, comptes de paiement et programmes d’affiliation doivent être gérés avec un adulte.
+2. Dans Supabase > SQL Editor, exécuter le fichier supabase-schema.sql.
+3. Dans Supabase > Authentication > Users, créer ton compte propriétaire. Copier son UUID.
+4. Dans SQL Editor, exécuter : insert into public.admins (user_id) values ('TON_UUID_ICI'); en remplaçant par l’UUID réel.
+5. Dans Supabase > Project Settings > API, copier Project URL et la clé anon/publishable (PAS service_role). Les coller dans config.js.
+6. Envoyer les 4 fichiers du dossier sur GitHub Pages (racine du dépôt). Le dossier admin.html sera alors accessible à /admin.html, mais seule l’identité autorisée pourra gérer les offres.
+7. Tester : visiteur non connecté = aucune page Admin utilisable ; compte non-admin = refusé ; compte admin = ajout/modification/publication ; offre brouillon invisible au public.
+
+SÉCURITÉ — À NE PAS FAIRE
+- Ne jamais coller la clé service_role dans config.js, GitHub, un message ou le navigateur.
+- Ne jamais partager ton mot de passe Supabase.
+- Ne pas désactiver les politiques RLS.
+- Ne pas croire que l’adresse /admin.html est secrète : la vraie protection est la connexion + les règles SQL.
+- Active la confirmation d’email et un mot de passe unique. Garde la récupération de compte sous contrôle d’un adulte de confiance.
+
+AVANT UNE VRAIE PUBLICATION COMMERCIALE
+- Contrôler chaque prix, stock, vendeur, URL et photo : les produits de démonstration ne sont pas tous des offres validées en temps réel.
+- Plusieurs éléments de la sélection Chambre Pinterest sont des idées/repérages, avec parfois une image d’ambiance ou une page de recherche plutôt qu’une fiche produit exacte. Les vérifier ou les remplacer avant de les publier.
+- Aucun lien d’affiliation ni revenu n’est actif tant qu’un programme n’a pas accepté le site et que les liens suivis n’ont pas été installés.
+- Ajouter les mentions légales, une politique de confidentialité adaptée, un contact professionnel et une information claire sur les liens affiliés. Ne pas inventer de société, d’adresse ou de responsable légal.
+- Les offres publiées doivent être exactes, datées et compréhensibles ; ne jamais présenter un prix repéré comme une réduction garantie sans prix de référence fiable.
+
+NOTE TECHNIQUE
+Le catalogue de repérage « Je garde / Écarter » reste local au navigateur et n’est pas synchronisé. L’Admin gère les offres publiées dans Supabase ; il ne transforme pas automatiquement les fiches de repérage en offres. Il faut les saisir dans l’Admin après vérification.
